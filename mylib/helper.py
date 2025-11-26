@@ -4,6 +4,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.tools import tool
+from docx import Document
 
 # --------------------------- Initialising Models --------------------------------------
 def get_llm():

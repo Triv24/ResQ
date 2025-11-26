@@ -1,0 +1,7 @@
+langchain
+streamlit
+langchain-google-genai
+langchain-community
+google-genai
+python-docx
+-e .
