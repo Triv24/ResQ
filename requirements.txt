@@ -4,4 +4,6 @@ langchain-google-genai
 langchain-community
 google-genai
 python-docx
+langchain-chroma
+chromadb
 -e .
