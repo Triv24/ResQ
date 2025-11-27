@@ -7,7 +7,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 init_session()
 
-
+# Introductory content
 st.markdown("""
 # ResQ's here to Rescue! 🫡
             
@@ -19,10 +19,14 @@ st.markdown("""
             
     🎯 Solve the assignments by learning from textbook
 """)
-
 st.write("\n\n")
 
+# Defining streamlit tabs
 model_qp, concepts, assignments = st.tabs(["Generate Model QP", "Explain Concepts", "Solve Assignments"])
+
+# ----------------------------------------------------------------------------------------------------------------------------
+#  Model Question Paper Generator 
+# ----------------------------------------------------------------------------------------------------------------------------
 
 with model_qp:
     st.write("How many Question Papers are there ? ")
@@ -39,16 +43,14 @@ with model_qp:
                 st.session_state.qp_content += load_pdf(temp_pdf_path)
             st.success("Loaded contents")
 
-    
-
     loaded_qp_content = st.session_state.qp_content
     if loaded_qp_content :
         with st.spinner("Starting Prediction..."):
 
             llm = ChatGoogleGenerativeAI(
-        model = "gemini-2.5-flash",
-        google_api_key = st.secrets["GEMINI_API_KEY"]
-    )
+                model = "gemini-2.5-flash",
+                google_api_key = st.secrets["GEMINI_API_KEY"]
+            )
             st.session_state.agent = create_agent(
                 model=ChatGoogleGenerativeAI(
                     model = "gemini-2.5-flash",
