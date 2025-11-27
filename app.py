@@ -67,7 +67,6 @@ with model_qp:
             })
             
             file_path = response["messages"][-1].content[0]["text"]
-            st.write(file_path)
 
             with open(file_path, "rb") as file:
                 st.download_button(
