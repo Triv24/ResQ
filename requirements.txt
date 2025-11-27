@@ -6,4 +6,7 @@ google-genai
 python-docx
 langchain-chroma
 chromadb
+pypdf
+sentence-transformers
+
 -e .

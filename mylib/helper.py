@@ -1,102 +1,117 @@
-# ------------------- Importing required functionalities ------------------------------
 import streamlit as st
-from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
-from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.tools import tool
-from langchain_chroma import Chroma
 from docx import Document
+import tempfile
 
-# ---------------------------- Session Initialisation ---------------------------------
 def init_session():
     if "llm" not in st.session_state:
-        st.session_state["llm"] = get_llm()
-    if "embedding_model" not in st.session_state:
-        st.session_state["embedding_model"] = get_embedding_model()
-    if "my_store" not in st.session_state:
-        st.session_state["my_store"] = get_vector_store()
-    if "string_parser" not in st.session_state:
-        st.session_state["string_parser"] = get_string_output_parser()
-    if "json_parser" not in st.session_state:
-        st.session_state["json_parser"] = get_json_output_parser()
+        st.session_state.llm = ChatGoogleGenerativeAI(
+            model = "gemini-2.5-flash",
+            google_api_key = st.secrets["GEMINI_API_KEY"]
+        )
 
-# --------------------------- Initialising Models --------------------------------------
-def get_llm():
+def load_pdf(file):
+    loader = PyPDFLoader(file)
+    docs = loader.load()
+
+    full_text = ""
+    for doc in docs:
+        full_text += doc.page_content
+
+    return full_text
+
+@tool
+def extract_questions(qp):
+    """
+    This tool will take the content that is loaded from the pdf file of question paper which contains a lot of other things.
+    This tool extracts only the questions from the loaded content
+    """
     llm = ChatGoogleGenerativeAI(
-        model = 'gemini-2.5-flash',
+        model = "gemini-2.5-flash",
         google_api_key = st.secrets["GEMINI_API_KEY"]
     )
-    return llm
 
-def get_embedding_model():
-    embedding_model = GoogleGenerativeAIEmbeddings(
-        model = "gemini-embedding-001",
-        google_api_key=st.secrets["GEMINI_API_KEY"]
+    response = llm.invoke(
+        """
+        please extract all the questions from the contents of a question paper loaded from a pdf file. 
+        Output should be clear, concise and to the point.
+        Avoid any greetings, just provide the questions.
+        start directly from Q1
+        ---
+        contents : {qp}
+        """
     )
-    return embedding_model
 
-def get_vector_store():
-    chroma_client = Chroma(
-        embedding_function=st.session_state.embedding_model,
-        persist_directory="Textbooks",
-        collection_name="textbook_data"
-    ) 
-    return chroma_client
-
-def get_string_output_parser ():
-    return StrOutputParser()
-
-def get_json_output_parser ():
-    return JsonOutputParser()
-
-# ---------------------- Tools for the Agent -------------------------------------------
-@tool
-def get_model_question_paper(question_papers : list) :
-    """
-    This tool will create a model question paper from given previous year question papers and the answers to it from the textbook context in word format.
-    """
+    return response.content
 
 @tool
-def explain_concepts(textbook) :
+def get_model_questions(question_sets : str) -> str :
     """
-    This tool will explain the doubts regarding the concepts which students find difficult to understand. It will explain it from the context of knowledgebase vectoDB provided.
+    This tool takes the extracted questions in form of string and then uses an llm to analyse the patterns of questions in the question papers and then predicts all the question for model question paper.
     """
+    llm = get_llm()
+
+    response = llm.invoke(
+        f"""
+    You are an expert exam paper analyst and academic question setter with deep experience in identifying patterns across previous examinations.
+    ---
+    INSTRUCTIONS
+    Carefully read and analyze the full contents of the previous question papers provided.
+
+    Identify recurring patterns, frequently tested concepts, question styles, difficulty levels, and the distribution of marks.
+
+    Based on this analysis, estimate and construct a complete model question paper that closely reflects what is most likely to appear in the upcoming exam.
+
+    Ensure the model paper:
+
+    Follows the same structure and format as typical past exams
+
+    Covers all major topics proportionately
+
+    Uses clear, academic language
+
+    Includes appropriate sectioning (Part A, Part B, etc., if relevant)
+    ---
+    CONTEXT
+
+    Previous question paper content:
+    {question_sets}
+
+    ---
+    OUTPUT
+
+    A well-structured string, all questions for model question paper that represents the best possible estimation of upcoming exam questions.
+    directly start from Q1
+    """
+    )
+
+    return response.content
 
 @tool
-def summarise_github_repo (url):
+def get_docx(model_questions : str) :
     """
-    This tool will summarise the contents of the github repo from provided url of the repo.
+    This tool takes the predicted model questions as an arguement and generates a file path of a word document containing these question.
     """
+    document = Document()
 
-@tool
-def solve_assignment(assignment) :
-    """
-    This tool will solve the assignments provided by the student by context retrieval from the textbook which is present in the knowledge base in a vectorDB
-    """
-
-# --------------------- Helper functions for the tools ---------------------------------
-
-def generate_docx():
-    pass
-
-def create_knowledge_base(file):
-    pass
-
-# ----------------------------- PROMPTS --------------------------------------------------
-
-model_question_prompt = PromptTemplate(
-    template="""
+    document.add_heading("Model Question Paper", level=2)
     
-    """,
-    input_variables=[]
-)
+    document.add_paragraph(model_questions)
+
+    with tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as tmp:
+        file_path = tmp.name
+        document.save(file_path)
+    
+    return file_path
 
 
+def get_llm():
+    llm = ChatGoogleGenerativeAI(
+        model = "gemini-2.5-flash",
+        google_api_key = st.secrets["GEMINI_API_KEY"]
+    )
 
-# ------------------------------- RAG essentials -----------------------------------------
-def add_knowledge_base():
-    pass
-
-def add_question_papers():
-    pass
+    return llm
 
