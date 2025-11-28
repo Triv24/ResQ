@@ -53,7 +53,10 @@ ResQ, as its name suggests is a "rescue" project for students pursuing Engineeri
 git clone https://github.com/Triv24/ResQ
 ```
 3. Install all the dependencies listed in `requirements.txt` file
-4. When you want to run the app - type the following comand in terminal :
+```bash
+pip install -r requirements.txt
+```
+5. When you want to run the app - type the following comand in terminal :
 
 ```bash
 streamlit run app.py
