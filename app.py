@@ -61,7 +61,7 @@ with model_qp:
                 }]
             })
             
-            file_path = response["messages"][-1].content[0]["text"]
+            file_path = response["messages"][-1].content[0]['text']
 
             with open(file_path, "rb") as file:
                 st.download_button(
