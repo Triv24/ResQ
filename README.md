@@ -48,9 +48,12 @@ ResQ, as its name suggests is a "rescue" project for students pursuing Engineeri
 - `Concepts explainer` to explain the concepts based on the extracted relevant chunks
 
 ## Setup codebase :
-1. clone the repository
-2. Install all the dependencies listed in `requirements.txt` file
-3. When you want to run the app - type the following comand in terminal :
+1. Clone the repository
+```bash
+git clone https://github.com/Triv24/ResQ
+```
+3. Install all the dependencies listed in `requirements.txt` file
+4. When you want to run the app - type the following comand in terminal :
 
 ```bash
 streamlit run app.py
