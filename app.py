@@ -155,7 +155,7 @@ with assignments :
                 st.success("Loaded content successfully...")
 
     elif (st.session_state.selected == "Plain Text") :
-        st.session_state.text = st.text_input("Paste the text Here...")
+        st.session_state.text = st.text_area("Paste the text Here...")
         if "text" not in st.session_state or st.session_state.text.strip() == "":
             st.warning("Please Insert text")
     
