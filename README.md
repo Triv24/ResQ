@@ -51,5 +51,7 @@ ResQ, as its name suggests is a "rescue" project for students pursuing Engineeri
 1. clone the repository
 2. Install all the dependencies listed in `requirements.txt` file
 3. When you want to run the app - type the following comand in terminal :
-   ```streamlit run app.py```
+   ```bash
+   streamlit run app.py
+   ```
    - Ensure that you are in the cloned directory before executing the command
