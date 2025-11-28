@@ -8,6 +8,34 @@ ResQ, as its name suggests is a "rescue" project for students pursuing Engineeri
   - Solves the assignments questions according to the student needs
   - searches for resources or students on the web
 
+## Techstack :
+### Backend :
+- Python (logic)
+- Langchain
+### Frontend
+- Streamlit
+
+## Functionalities Used :
+
+### Langchain :
+- Document Loaders
+- Text Splitters
+- Google Genai Chat model
+- Prompts
+- Tools
+- Agents
+- LLM Model
+- Tavily
+
+### Streamlit :
+- Streamlit basic UI components
+- Streamlit markdown
+- Streamlit Tabs
+- File Uploaders
+- Succes messages
+- Warning messages
+- Session States
+
 ## Tools used in ResQ :
 
 ### Built-in tools :
