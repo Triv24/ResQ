@@ -8,6 +8,7 @@ from langchain_chroma import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_core.output_parsers import StrOutputParser
+from langchain_tavily import TavilySearch
 from docx import Document
 import tempfile
 
@@ -251,6 +252,16 @@ output format should be string of answer in markdown.
 
     
 # --------------------------------------------------------------------------------------------------------------
-# Assignments Helper
+# Web Search Resources 
 # --------------------------------------------------------------------------------------------------------------
 
+def get_search_results(query):
+    search_tool = TavilySearch(
+      max_results = 5,
+      topic="general",
+      tavily_api_key=st.secrets["TAVILY_API_KEY"]
+    )
+
+    response = search_tool.invoke(query)
+
+    return response

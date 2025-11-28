@@ -1,6 +1,6 @@
 import streamlit as st
 import tempfile
-from mylib.helper import load_pdf, extract_questions, get_model_questions, get_docx, get_chunks, store_in_db, get_relevant_chunks, explain_concept
+from mylib.helper import load_pdf, extract_questions, get_model_questions, get_docx, get_chunks, store_in_db, get_relevant_chunks, explain_concept, get_search_results
 from langchain.agents import create_agent
 from langchain_google_genai import ChatGoogleGenerativeAI
 
@@ -19,7 +19,7 @@ st.markdown("""
 st.write("\n\n")
 
 # Defining streamlit tabs
-model_qp, concepts, assignments = st.tabs(["Generate Model QP", "Explain Concepts", "Solve Assignments"])
+model_qp, concepts, assignments, resources = st.tabs(["Generate Model QP", "Explain Concepts", "Solve Assignments", "Get Resources"])
 
 # ----------------------------------------------------------------------------------------------------------------------------
 #  Model Question Paper Generator 
@@ -181,3 +181,20 @@ with assignments :
                 )
 
             st.markdown(response.content)
+
+with resources:
+
+    st.session_state.query = st.text_input("What do you want to search for ?")
+
+    with st.spinner("Getting the results for you... ") :
+        if "query" in st.session_state and st.session_state.query.strip() != "":
+            response = get_search_results(st.session_state.query)
+
+            for result in response["results"] :
+                st.markdown(f"""
+
+    {result['title']}
+
+
+    ```{result['url']}```     
+    """)
