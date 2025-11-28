@@ -54,14 +54,14 @@ with model_qp:
             )
 
             agent = st.session_state.agent
-            response = agent.invoke({
+            st.session_state.response = agent.invoke({
                 "messages" : [{
                     "role" : "user",
                     "content" : f"Please predict the model question paper for the question papers content : {loaded_qp_content}. first extract the clear questions from the content using a tool, then use that extracted questions for analysis and prediction for model question paper. Ultimately i need the file path of the word document that contains the model question papers. Just give me the final file path in string format. Do not add unnecessary words in output, the output string should wholly represent the file path only."
                 }]
             })
             
-            file_path = response["messages"][-1].content[0]['text']
+            file_path = st.session_state.response["messages"][-1].content[0]['text']
 
             with open(file_path, "rb") as file:
                 st.download_button(
