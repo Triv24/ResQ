@@ -8,4 +8,3 @@ langchain-chroma
 chromadb
 pypdf
 sentence-transformers
--e .
