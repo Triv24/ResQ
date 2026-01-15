@@ -18,23 +18,24 @@ ResQ, as its name suggests is a "rescue" project for students pursuing Engineeri
 ## Functionalities Used :
 
 ### Langchain :
-- Document Loaders
-- Text Splitters
-- Google Genai Chat model
-- Prompts
-- Tools
-- Agents
-- LLM Model
-- Tavily
+  - Vector DBs
+  - Document Loaders
+  - Text Splitters
+  - Google Genai Chat model
+  - Prompts
+  - Tools
+  - Agents
+  - LLM Model
+  - Tavily
 
 ### Streamlit :
-- Streamlit basic UI components
-- Streamlit markdown
-- Streamlit Tabs
-- File Uploaders
-- Succes messages
-- Warning messages
-- Session States
+  - Streamlit basic UI components
+  - Streamlit markdown
+  - Streamlit Tabs
+  - File Uploaders
+  - Succes messages
+  - Warning messages
+  - Session States
 
 ## Tools used in ResQ :
 
