@@ -11,6 +11,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_tavily import TavilySearch
 from docx import Document
 import tempfile
+from uuid import uuid4
 
 
 
@@ -137,7 +138,7 @@ def get_chunks(text_content):
 
     chunks = text_splitter.split_text(text_content)
 
-    document_chunks = [documents.Document(page_content=chunk) for chunk in chunks]
+    document_chunks = [documents.Document(page_content=chunk, id=i) for i,chunk in enumerate(chunks)]
 
     return document_chunks
 
@@ -160,7 +161,8 @@ def store_in_db(document_chunks) :
         collection_name="textbook_data"
     )
 
-    db.add_documents(document_chunks)
+    uuids = [str(uuid4()) for _ in range(len(document_chunks))]
+    db.add_documents(documents=document_chunks, ids=uuids)
 
     return db
 
